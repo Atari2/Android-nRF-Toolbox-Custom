@@ -23,10 +23,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import no.nordicsemi.android.analytics.AppAnalytics
 import no.nordicsemi.android.common.core.ApplicationScope
-import no.nordicsemi.android.common.logger.BleLoggerAndLauncher
-import no.nordicsemi.android.common.logger.DefaultBleLogger
 import no.nordicsemi.android.common.navigation.NavigationResult
 import no.nordicsemi.android.common.navigation.Navigator
 import no.nordicsemi.android.common.navigation.di.NavigationModule
@@ -74,17 +71,11 @@ internal class UARTViewModelTest {
     @JvmField
     val analyticsService: Navigator = mockk(relaxed = true)
 
-    @RelaxedMockK
-    lateinit var analytics: AppAnalytics
-
     @MockK
     lateinit var stringConst: StringConst
 
     @RelaxedMockK
     lateinit var context: Context
-
-    @RelaxedMockK
-    lateinit var logger: BleLoggerAndLauncher
 
     @Inject
     lateinit var repository: UARTRepository
@@ -112,18 +103,7 @@ internal class UARTViewModelTest {
 
     @Before
     fun before() {
-        viewModel = UARTViewModel(repository, mockk(relaxed = true), dataSource, mockk(relaxed = true), object :
-            NordicLoggerFactory {
-            override fun createNordicLogger(
-                context: Context,
-                profile: String?,
-                key: String,
-                name: String?,
-            ): BleLoggerAndLauncher {
-                return logger
-            }
-
-        })
+        viewModel = UARTViewModel(repository, mockk(relaxed = true), dataSource)
         runBlocking {
             mockkStatic("no.nordicsemi.android.common.core.ApplicationScopeKt")
             every { ApplicationScope } returns CoroutineScope(UnconfinedTestDispatcher())
@@ -132,12 +112,6 @@ internal class UARTViewModelTest {
             uartServer = UartServer(CoroutineScope(UnconfinedTestDispatcher()))
             uartServer.start(spyk(), device)
         }
-    }
-
-    @Before
-    fun prepareLogger() {
-        mockkObject(DefaultBleLogger.Companion)
-        every { DefaultBleLogger.create(any(), any(), any(), any()) } returns mockk()
     }
 
     @Test
