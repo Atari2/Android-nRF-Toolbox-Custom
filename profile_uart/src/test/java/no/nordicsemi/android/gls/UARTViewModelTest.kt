@@ -12,7 +12,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +33,6 @@ import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 import no.nordicsemi.android.uart.UartServer
 import no.nordicsemi.android.uart.data.UARTPersistentDataSource
 import no.nordicsemi.android.uart.repository.UARTRepository
-import no.nordicsemi.android.uart.view.DisconnectEvent
 import no.nordicsemi.android.uart.viewmodel.UARTViewModel
 import no.nordicsemi.android.ui.view.StringConst
 import org.junit.After
@@ -73,9 +71,6 @@ internal class UARTViewModelTest {
 
     @MockK
     lateinit var stringConst: StringConst
-
-    @RelaxedMockK
-    lateinit var context: Context
 
     @Inject
     lateinit var repository: UARTRepository

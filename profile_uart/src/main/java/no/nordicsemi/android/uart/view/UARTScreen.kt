@@ -31,12 +31,10 @@
 
 package no.nordicsemi.android.uart.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,12 +48,12 @@ import no.nordicsemi.android.common.theme.view.PagerView
 import no.nordicsemi.android.common.theme.view.PagerViewEntity
 import no.nordicsemi.android.common.theme.view.PagerViewItem
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
+import no.nordicsemi.android.kotlin.ble.ui.scanner.view.DeviceConnectingView
+import no.nordicsemi.android.kotlin.ble.ui.scanner.view.DeviceDisconnectedView
 import no.nordicsemi.android.uart.R
 import no.nordicsemi.android.uart.viewmodel.UARTViewModel
 import no.nordicsemi.android.ui.view.NavigateUpButton
 import no.nordicsemi.android.ui.view.ProfileAppBar
-import no.nordicsemi.android.kotlin.ble.ui.scanner.view.DeviceConnectingView
-import no.nordicsemi.android.kotlin.ble.ui.scanner.view.DeviceDisconnectedView
 
 @Composable
 fun UARTScreen() {
@@ -98,7 +96,6 @@ private fun PaddingBox(content: @Composable () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SuccessScreen() {
     val input = stringResource(id = R.string.uart_input)

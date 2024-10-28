@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext
     private val context: Context,
     private val navigationManager: Navigator,
-    private val activitySignals: ActivitySignals,
+    activitySignals: ActivitySignals,
     uartRepository: UARTRepository,
 ) : ViewModel() {
 

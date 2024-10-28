@@ -45,7 +45,6 @@ import kotlinx.coroutines.launch
 import no.nordicsemi.android.common.navigation.NavigationResult
 import no.nordicsemi.android.common.navigation.Navigator
 import no.nordicsemi.android.kotlin.ble.core.ServerDevice
-import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
 import no.nordicsemi.android.toolbox.scanner.ScannerDestinationId
 import no.nordicsemi.android.uart.data.MacroEol
 import no.nordicsemi.android.uart.data.UARTConfiguration

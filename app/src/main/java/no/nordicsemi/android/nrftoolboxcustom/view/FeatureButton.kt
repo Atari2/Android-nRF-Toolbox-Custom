@@ -65,7 +65,6 @@ import no.nordicsemi.android.nrftoolboxcustom.R
 @Composable
 fun FeatureButton(
     @DrawableRes iconId: Int,
-    @StringRes nameCode: Int,
     @StringRes name: Int,
     isRunning: Boolean? = null,
     @StringRes description: Int? = null,
@@ -124,5 +123,5 @@ fun FeatureButton(
 @Preview
 @Composable
 private fun FeatureButtonPreview() {
-    FeatureButton(R.drawable.ic_csc, R.string.csc_module, R.string.csc_module_full) { }
+    FeatureButton(R.drawable.ic_csc, R.string.csc_module_full) { }
 }

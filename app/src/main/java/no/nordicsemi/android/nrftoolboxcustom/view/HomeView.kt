@@ -76,7 +76,6 @@ fun HomeScreen() {
 
                 FeatureButton(
                     R.drawable.ic_uart,
-                    R.string.uart_module,
                     R.string.uart_module_full,
                     state.isUARTModuleRunning
                 ) {

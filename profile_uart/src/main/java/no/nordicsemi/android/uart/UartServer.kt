@@ -3,7 +3,6 @@ package no.nordicsemi.android.uart
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.ParcelUuid
-import androidx.compose.ui.util.fastJoinToString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -103,10 +102,6 @@ class UartServer @Inject constructor(
                 .mapNotNull { it.values.firstOrNull() }
                 .collect { setUpConnection(it) }
         }
-    }
-
-    internal fun stopServer() {
-        server.stopServer()
     }
 
     private fun setUpConnection(connection: ServerBluetoothGattConnection) {
