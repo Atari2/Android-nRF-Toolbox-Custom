@@ -1,6 +1,5 @@
 package no.nordicsemi.android.gls
 
-import android.content.Context
 import androidx.test.rule.ServiceTestRule
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -9,7 +8,6 @@ import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -78,9 +76,9 @@ internal class UARTViewModelTest {
     @Inject
     lateinit var dataSource: UARTPersistentDataSource
 
-    lateinit var viewModel: UARTViewModel
+    private lateinit var viewModel: UARTViewModel
 
-    lateinit var uartServer: UartServer
+    private lateinit var uartServer: UartServer
 
     @Inject
     lateinit var device: MockServerDevice

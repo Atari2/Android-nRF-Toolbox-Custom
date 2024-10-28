@@ -57,10 +57,10 @@ import javax.inject.Singleton
 @Singleton
 class UARTRepository @Inject internal constructor(
     @ApplicationContext
-    private val context: Context,
+    @Suppress("UNUSED") private val context: Context,
     private val serviceManager: ServiceManager,
     private val configurationDataSource: ConfigurationDataSource,
-    private val stringConst: StringConst,
+    @Suppress("UNUSED") private val stringConst: StringConst,
 ) {
 
     private val _data = MutableStateFlow(UARTServiceData())

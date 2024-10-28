@@ -50,7 +50,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext
-    private val context: Context,
+    @Suppress("UNUSED") private val context: Context,
     private val navigationManager: Navigator,
     activitySignals: ActivitySignals,
     uartRepository: UARTRepository,
