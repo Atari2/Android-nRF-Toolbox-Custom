@@ -39,24 +39,15 @@ if (getGradle().getStartParameter().getTaskRequests().toString().contains("Relea
 }
 
 android {
-    namespace = "no.nordicsemi.android.nrftoolbox"
+    namespace = "no.nordicsemi.android.nrftoolboxcustom"
 }
 
 dependencies {
     //Hilt requires to implement every module in the main app module
     //https://github.com/google/dagger/issues/2123
-    implementation(project(":profile_bps"))
-    implementation(project(":profile_csc"))
-    implementation(project(":profile_cgms"))
-    implementation(project(":profile_gls"))
-    implementation(project(":profile_hrs"))
-    implementation(project(":profile_hts"))
-    implementation(project(":profile_prx"))
-    implementation(project(":profile_rscs"))
 
     implementation(project(":profile_uart"))
 
-    implementation(project(":lib_analytics"))
     implementation(project(":lib_ui"))
     implementation(project(":lib_utils"))
     implementation(project(":lib_service"))
@@ -66,7 +57,6 @@ dependencies {
     implementation(libs.nordic.theme)
     implementation(libs.nordic.navigation)
     implementation(libs.nordic.blek.uiscanner)
-    implementation(libs.nordic.uilogger)
     implementation(libs.nordic.permissions.ble)
     implementation(libs.nordic.analytics)
     

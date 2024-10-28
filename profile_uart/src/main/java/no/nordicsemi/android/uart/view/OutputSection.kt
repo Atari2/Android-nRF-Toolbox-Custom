@@ -53,6 +53,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,6 +74,37 @@ import java.util.Locale
 
 @Composable
 internal fun OutputSection(records: List<UARTRecord>, onEvent: (UARTViewEvent) -> Unit) {
+
+    var splitRecords by remember {
+        mutableStateOf(emptyList<List<UARTRecord>>())
+    }
+
+    LaunchedEffect(records.size) {
+        if (records.isEmpty()) {
+            splitRecords = emptyList()
+            return@LaunchedEffect
+        }
+        val newRecords = mutableListOf<List<UARTRecord>>()
+        val tempList = mutableListOf<UARTRecord>()
+        var currentType = records.first().type
+        for (rec in records.asSequence().sortedBy {
+            it.timestamp
+        }) {
+            if (rec.type == currentType) {
+                tempList.add(rec)
+            } else {
+                newRecords.add(tempList.toList())
+                tempList.clear()
+                tempList.add(rec)
+                currentType = rec.type
+            }
+        }
+        if (tempList.isNotEmpty()) {
+            newRecords.add(tempList)
+        }
+        splitRecords = newRecords
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -93,14 +130,14 @@ internal fun OutputSection(records: List<UARTRecord>, onEvent: (UARTViewEvent) -
             modifier = Modifier.fillMaxWidth(),
             state = scrollState
         ) {
-            if (records.isEmpty()) {
+            if (splitRecords.isEmpty()) {
                 item { Text(text = stringResource(id = R.string.uart_output_placeholder)) }
             } else {
-                records.forEach {
+                splitRecords.forEach {
                     item {
-                        when (it.type) {
-                            UARTRecordType.INPUT -> MessageItemInput(record = it)
-                            UARTRecordType.OUTPUT -> MessageItemOutput(record = it)
+                        when (it.first().type) {
+                            UARTRecordType.INPUT -> MessageItemsInput(records = it)
+                            UARTRecordType.OUTPUT -> MessageItemsOutput(records = it)
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -109,18 +146,47 @@ internal fun OutputSection(records: List<UARTRecord>, onEvent: (UARTViewEvent) -
             }
         }
 
-        LaunchedEffect(records) {
-            if (scrollState.isScrolledToTheEnd() || records.isEmpty()) {
+        LaunchedEffect(splitRecords) {
+            if (scrollState.isScrolledToTheEnd() || splitRecords.isEmpty()) {
                 return@LaunchedEffect
             }
             launch {
-                scrollState.scrollToItem(records.lastIndex)
+                scrollState.scrollToItem(splitRecords.lastIndex)
             }
         }
     }
 }
 
 fun LazyListState.isScrolledToTheEnd() = layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+
+
+@Composable
+private fun MessageItemsInput(records: List<UARTRecord>) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.End
+    ) {
+        Text(
+            text = records.first().timeToString(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 10.dp))
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(8.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(
+                text = records.joinToString(separator = "\n") { it.text },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+        }
+    }
+}
 
 @Composable
 private fun MessageItemInput(record: UARTRecord) {
@@ -170,6 +236,33 @@ private fun MessageItemOutput(record: UARTRecord) {
         ) {
             Text(
                 text = record.text,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+    }
+}
+
+@Composable
+private fun MessageItemsOutput(records: List<UARTRecord>) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = records.first().timeToString(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomEnd = 10.dp))
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(8.dp)
+        ) {
+            Text(
+                text = records.joinToString(separator = "\n") { it.text },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimary
             )

@@ -39,7 +39,6 @@ import no.nordicsemi.android.uart.data.UARTPersistentDataSource
 import no.nordicsemi.android.uart.repository.UARTRepository
 import no.nordicsemi.android.uart.view.DisconnectEvent
 import no.nordicsemi.android.uart.viewmodel.UARTViewModel
-import no.nordicsemi.android.ui.view.NordicLoggerFactory
 import no.nordicsemi.android.ui.view.StringConst
 import org.junit.After
 import org.junit.Assert.assertEquals

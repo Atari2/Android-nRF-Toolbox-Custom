@@ -29,20 +29,23 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.nrftoolbox.repository
+package no.nordicsemi.android.nrftoolboxcustom
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+import no.nordicsemi.android.uart.UartServer
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ActivitySignals @Inject constructor() {
+@HiltAndroidApp
+class NrfToolboxApplication : Application() {
 
-    private val _onResumeTrigger = MutableStateFlow(false)
-    val state = _onResumeTrigger.asStateFlow()
+    @Inject
+    lateinit var uartServer: UartServer
 
-    fun onResume() {
-        _onResumeTrigger.value = !_onResumeTrigger.value
+
+    override fun onCreate() {
+        super.onCreate()
+
+        uartServer.start(this)
     }
 }

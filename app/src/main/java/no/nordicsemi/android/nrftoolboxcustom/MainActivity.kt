@@ -29,20 +29,48 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.nrftoolbox.view
+package no.nordicsemi.android.nrftoolboxcustom
 
-data class HomeViewState(
-    val isCSCModuleRunning: Boolean = false,
-    val isHRSModuleRunning: Boolean = false,
-    val isHTSModuleRunning: Boolean = false,
-    val isRSCSModuleRunning: Boolean = false,
-    val isPRXModuleRunning: Boolean = false,
-    val isCGMModuleRunning: Boolean = false,
-    val isUARTModuleRunning: Boolean = false,
-    val refreshToggle: Boolean = false
-) {
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import dagger.hilt.android.AndroidEntryPoint
+import no.nordicsemi.android.common.analytics.view.AnalyticsPermissionRequestDialog
+import no.nordicsemi.android.common.navigation.NavigationView
+import no.nordicsemi.android.common.theme.NordicActivity
+import no.nordicsemi.android.common.theme.NordicTheme
+import no.nordicsemi.android.nrftoolboxcustom.repository.ActivitySignals
+import no.nordicsemi.android.toolbox.scanner.ScannerDestination
+import javax.inject.Inject
 
-    fun copyWithRefresh(): HomeViewState {
-        return copy(refreshToggle = !refreshToggle)
+@AndroidEntryPoint
+class MainActivity : NordicActivity() {
+
+    @Inject
+    lateinit var activitySignals: ActivitySignals
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            NordicTheme {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    NavigationView(HomeDestinations + ProfileDestinations + ScannerDestination)
+                }
+
+                AnalyticsPermissionRequestDialog()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activitySignals.onResume()
     }
 }

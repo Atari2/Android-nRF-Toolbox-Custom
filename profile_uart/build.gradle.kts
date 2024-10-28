@@ -44,7 +44,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":lib_analytics"))
     implementation(project(":lib_service"))
     implementation(project(":lib_scanner"))
     implementation(project(":lib_ui"))
@@ -53,7 +52,6 @@ dependencies {
     implementation(libs.nordic.core)
     implementation(libs.nordic.theme)
     implementation(libs.nordic.navigation)
-    implementation(libs.nordic.uilogger)
 
     implementation(libs.nordic.blek.client)
     implementation(libs.nordic.blek.profile)
@@ -87,7 +85,6 @@ dependencies {
     testImplementation(libs.test.mockk)
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.test.slf4j.simple)
     testImplementation(libs.test.robolectric)
     testImplementation(libs.kotlin.junit)
 

@@ -29,34 +29,23 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.nrftoolbox
+package no.nordicsemi.android.nrftoolboxcustom
 
-import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
-import no.nordicsemi.android.analytics.AppAnalytics
-import no.nordicsemi.android.analytics.AppOpenEvent
-import no.nordicsemi.android.gls.GLSServer
-import no.nordicsemi.android.uart.UartServer
-import javax.inject.Inject
+import no.nordicsemi.android.common.navigation.createSimpleDestination
+import no.nordicsemi.android.common.navigation.defineDestination
+import no.nordicsemi.android.nrftoolboxcustom.view.HomeScreen
+import no.nordicsemi.android.toolbox.scanner.ScannerDestination
+import no.nordicsemi.android.uart.view.UARTScreen
 
-@HiltAndroidApp
-class NrfToolboxApplication : Application() {
+val HomeDestinationId = createSimpleDestination("home-destination")
 
-    @Inject
-    lateinit var analytics: AppAnalytics
+val HomeDestinations = listOf(
+    defineDestination(HomeDestinationId) { HomeScreen() },
+    ScannerDestination
+)
 
-    @Inject
-    lateinit var uartServer: UartServer
+val UARTDestinationId = createSimpleDestination("uart-destination")
 
-    @Inject
-    lateinit var glsServer: GLSServer
-
-    override fun onCreate() {
-        super.onCreate()
-
-        analytics.logEvent(AppOpenEvent)
-
-        uartServer.start(this)
-        glsServer.start(this)
-    }
-}
+val ProfileDestinations = listOf(
+    defineDestination(UARTDestinationId) { UARTScreen() }
+)

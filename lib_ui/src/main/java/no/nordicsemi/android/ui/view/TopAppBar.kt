@@ -34,6 +34,7 @@ package no.nordicsemi.android.ui.view
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -51,9 +52,9 @@ import no.nordicsemi.android.ui.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CloseIconAppBar(text: String, onClick: () -> Unit) {
-    SmallTopAppBar(
+    TopAppBar(
         title = { Text(text, maxLines = 2) },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             scrolledContainerColor = MaterialTheme.colorScheme.primary,
             containerColor = colorResource(id = R.color.appBarColor),
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -73,44 +74,10 @@ fun CloseIconAppBar(text: String, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoggerBackIconAppBar(text: String, onClick: () -> Unit) {
-    SmallTopAppBar(
-        title = { Text(text, maxLines = 2) },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            scrolledContainerColor = MaterialTheme.colorScheme.primary,
-            containerColor = colorResource(id = R.color.appBarColor),
-            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-            actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
-        navigationIcon = {
-            IconButton(onClick = { onClick() }) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    contentDescription = stringResource(id = R.string.back_screen),
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { onClick() }) {
-                Icon(
-                    painterResource(id = R.drawable.ic_logger),
-                    contentDescription = stringResource(id = R.string.open_logger),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 fun BackIconAppBar(text: String, onClick: () -> Unit) {
-    SmallTopAppBar(
+    TopAppBar(
         title = { Text(text, maxLines = 2) },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             scrolledContainerColor = MaterialTheme.colorScheme.primary,
             containerColor = colorResource(id = R.color.appBarColor),
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -131,10 +98,10 @@ fun BackIconAppBar(text: String, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoggerIconAppBar(text: String, onClick: () -> Unit, onDisconnectClick: () -> Unit, onLoggerClick: () -> Unit) {
-    SmallTopAppBar(
+fun LoggerIconAppBar(text: String, onClick: () -> Unit, onDisconnectClick: () -> Unit) {
+    TopAppBar(
         title = { Text(text, maxLines = 2) },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             scrolledContainerColor = MaterialTheme.colorScheme.primary,
             containerColor = colorResource(id = R.color.appBarColor),
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -144,7 +111,7 @@ fun LoggerIconAppBar(text: String, onClick: () -> Unit, onDisconnectClick: () ->
         navigationIcon = {
             IconButton(onClick = { onClick() }) {
                 Icon(
-                    Icons.Default.ArrowBack,
+                    Icons.AutoMirrored.Filled.ArrowBack,
                     tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = stringResource(id = R.string.back_screen),
                 )
@@ -160,14 +127,6 @@ fun LoggerIconAppBar(text: String, onClick: () -> Unit, onDisconnectClick: () ->
             ) {
                 Text(stringResource(id = R.string.disconnect))
             }
-            IconButton(onClick = { onLoggerClick() }) {
-                Icon(
-                    painterResource(id = R.drawable.ic_logger),
-                    contentDescription = stringResource(id = R.string.open_logger),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
         }
     )
 }
@@ -180,13 +139,12 @@ fun ProfileAppBar(
     title: Int,
     navigateUp: () -> Unit,
     disconnect: () -> Unit,
-    openLogger: () -> Unit
 ) {
     if (deviceName?.isNotBlank() == true) {
         if (connectionState?.state == GattConnectionState.STATE_DISCONNECTING || connectionState?.state == GattConnectionState.STATE_DISCONNECTED) {
-            LoggerBackIconAppBar(deviceName, openLogger)
+            BackIconAppBar(stringResource(id = title), navigateUp)
         } else {
-            LoggerIconAppBar(deviceName, navigateUp, disconnect, openLogger)
+            LoggerIconAppBar(deviceName, navigateUp, disconnect)
         }
     } else {
         BackIconAppBar(stringResource(id = title), navigateUp)

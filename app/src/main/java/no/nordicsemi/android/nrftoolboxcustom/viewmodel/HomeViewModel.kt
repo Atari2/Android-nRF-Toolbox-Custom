@@ -29,7 +29,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.nrftoolbox.viewmodel
+package no.nordicsemi.android.nrftoolboxcustom.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -40,19 +40,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import no.nordicsemi.android.analytics.AppAnalytics
-import no.nordicsemi.android.analytics.ProfileOpenEvent
-import no.nordicsemi.android.cgms.repository.CGMRepository
-import no.nordicsemi.android.common.logger.LoggerLauncher
 import no.nordicsemi.android.common.navigation.DestinationId
 import no.nordicsemi.android.common.navigation.Navigator
-import no.nordicsemi.android.csc.repository.CSCRepository
-import no.nordicsemi.android.hrs.service.HRSRepository
-import no.nordicsemi.android.hts.repository.HTSRepository
-import no.nordicsemi.android.nrftoolbox.repository.ActivitySignals
-import no.nordicsemi.android.nrftoolbox.view.HomeViewState
-import no.nordicsemi.android.prx.repository.PRXRepository
-import no.nordicsemi.android.rscs.repository.RSCSRepository
+import no.nordicsemi.android.nrftoolboxcustom.repository.ActivitySignals
+import no.nordicsemi.android.nrftoolboxcustom.view.HomeViewState
 import no.nordicsemi.android.uart.repository.UARTRepository
 import javax.inject.Inject
 
@@ -62,44 +53,13 @@ class HomeViewModel @Inject constructor(
     private val context: Context,
     private val navigationManager: Navigator,
     private val activitySignals: ActivitySignals,
-    cgmRepository: CGMRepository,
-    cscRepository: CSCRepository,
-    hrsRepository: HRSRepository,
-    htsRepository: HTSRepository,
-    prxRepository: PRXRepository,
-    rscsRepository: RSCSRepository,
     uartRepository: UARTRepository,
-    private val analytics: AppAnalytics
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeViewState())
     val state = _state.asStateFlow()
 
     init {
-        cgmRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isCGMModuleRunning = it)
-        }.launchIn(viewModelScope)
-
-        cscRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isCSCModuleRunning = it)
-        }.launchIn(viewModelScope)
-
-        hrsRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isHRSModuleRunning = it)
-        }.launchIn(viewModelScope)
-
-        htsRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isHTSModuleRunning = it)
-        }.launchIn(viewModelScope)
-
-        prxRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isPRXModuleRunning = it)
-        }.launchIn(viewModelScope)
-
-        rscsRepository.isRunning.onEach {
-            _state.value = _state.value.copy(isRSCSModuleRunning = it)
-        }.launchIn(viewModelScope)
-
         uartRepository.isRunning.onEach {
             _state.value = _state.value.copy(isUARTModuleRunning = it)
         }.launchIn(viewModelScope)
@@ -113,11 +73,4 @@ class HomeViewModel @Inject constructor(
         navigationManager.navigateTo(destination)
     }
 
-    fun openLogger() {
-        LoggerLauncher.launch(context)
-    }
-
-    fun logEvent(event: ProfileOpenEvent) {
-        analytics.logEvent(event)
-    }
 }

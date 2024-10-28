@@ -29,7 +29,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.nrftoolbox.view
+package no.nordicsemi.android.nrftoolboxcustom.view
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -59,7 +59,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import no.nordicsemi.android.nrftoolbox.R
+import no.nordicsemi.android.nrftoolboxcustom.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

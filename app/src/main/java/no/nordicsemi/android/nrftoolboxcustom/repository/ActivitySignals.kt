@@ -29,29 +29,20 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package no.nordicsemi.android.uart.view
+package no.nordicsemi.android.nrftoolboxcustom.repository
 
-import no.nordicsemi.android.uart.data.MacroEol
-import no.nordicsemi.android.uart.data.UARTConfiguration
-import no.nordicsemi.android.uart.data.UARTMacro
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal sealed class UARTViewEvent
+@Singleton
+class ActivitySignals @Inject constructor() {
 
-internal data class OnEditMacro(val position: Int) : UARTViewEvent()
-internal data class OnCreateMacro(val macro: UARTMacro) : UARTViewEvent()
-internal object OnDeleteMacro : UARTViewEvent()
-internal object OnEditFinish : UARTViewEvent()
+    private val _onResumeTrigger = MutableStateFlow(false)
+    val state = _onResumeTrigger.asStateFlow()
 
-internal data class OnConfigurationSelected(val configuration: UARTConfiguration) : UARTViewEvent()
-internal data class OnAddConfiguration(val name: String) : UARTViewEvent()
-internal object OnEditConfiguration : UARTViewEvent()
-internal object OnDeleteConfiguration : UARTViewEvent()
-internal data class OnRunMacro(val macro: UARTMacro) : UARTViewEvent()
-internal data class OnRunInput(val text: String, val newLineChar: MacroEol) : UARTViewEvent()
-
-internal object ClearOutputItems : UARTViewEvent()
-internal object DisconnectEvent : UARTViewEvent()
-
-internal object NavigateUp : UARTViewEvent()
-
-internal object MacroInputSwitchClick : UARTViewEvent()
+    fun onResume() {
+        _onResumeTrigger.value = !_onResumeTrigger.value
+    }
+}

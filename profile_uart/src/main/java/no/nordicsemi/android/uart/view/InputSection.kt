@@ -36,9 +36,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -57,28 +59,20 @@ import no.nordicsemi.android.utils.EMPTY
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun InputSection(onEvent: (UARTViewEvent) -> Unit) {
-    val text = rememberSaveable { mutableStateOf(String.EMPTY) }
+    var text by rememberSaveable { mutableStateOf(String.EMPTY) }
     val hint = stringResource(id = R.string.uart_input_hint)
-    val checkedItem = rememberSaveable { mutableStateOf(MacroEol.values()[0]) }
+    val checkedItem by rememberSaveable { mutableStateOf(MacroEol.entries[0]) }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(modifier = Modifier.weight(1f)) {
-
-            val scope = rememberCoroutineScope()
-            val scrollState = rememberScrollState()
-
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 65.dp)
-                    .verticalScroll(scrollState),
-                value = text.value,
+                    .heightIn(max = 65.dp),
+                value = text,
                 label = { Text(hint) },
                 onValueChange = { newValue: String ->
-                    text.value = newValue
-                    scope.launch {
-                        scrollState.scrollTo(Int.MAX_VALUE)
-                    }
+                    text = newValue
                 }
             )
         }
@@ -87,8 +81,8 @@ internal fun InputSection(onEvent: (UARTViewEvent) -> Unit) {
 
         Button(
             onClick = {
-                onEvent(OnRunInput(text.value, checkedItem.value))
-                text.value = String.EMPTY
+                onEvent(OnRunInput(text, checkedItem))
+                text = String.EMPTY
             },
             modifier = Modifier.padding(top = 6.dp)
         ) {
@@ -101,7 +95,7 @@ internal fun InputSection(onEvent: (UARTViewEvent) -> Unit) {
 internal fun EditInputSection(onEvent: (UARTViewEvent) -> Unit) {
     val checkedItem = rememberSaveable { mutableStateOf(MacroEol.values()[0]) }
 
-    val items = MacroEol.values().map {
+    val items = MacroEol.entries.map {
         RadioButtonItem(it.toDisplayString(), it == checkedItem.value)
     }
     val viewEntity = RadioGroupViewEntity(items)

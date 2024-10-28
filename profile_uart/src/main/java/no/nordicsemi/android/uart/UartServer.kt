@@ -3,19 +3,20 @@ package no.nordicsemi.android.uart
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.ParcelUuid
+import androidx.compose.ui.util.fastJoinToString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import no.nordicsemi.android.common.core.DataByteArray
 import no.nordicsemi.android.kotlin.ble.advertiser.BleAdvertiser
 import no.nordicsemi.android.kotlin.ble.core.MockServerDevice
 import no.nordicsemi.android.kotlin.ble.core.advertiser.BleAdvertisingConfig
 import no.nordicsemi.android.kotlin.ble.core.advertiser.BleAdvertisingData
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattPermission
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattProperty
+import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 import no.nordicsemi.android.kotlin.ble.server.main.ServerBleGatt
 import no.nordicsemi.android.kotlin.ble.server.main.service.ServerBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.server.main.service.ServerBleGattCharacteristicConfig
@@ -114,7 +115,16 @@ class UartServer @Inject constructor(
         txCharacteristic = glsService.findCharacteristic(UART_TX_CHARACTERISTIC_UUID)!!
 
         rxCharacteristic.value.onEach {
-            send(txCharacteristic, it)
+            val numberOfSend = it.value.asSequence().take(it.size).map { c ->
+                Char(c.toUShort())
+            }.joinToString(separator = "").toIntOrNull()
+            if (numberOfSend != null) {
+                (0..numberOfSend).forEach { _ ->
+                    send(txCharacteristic, DataByteArray("Hello, world!".toByteArray()))
+                }
+            } else {
+                send(txCharacteristic, it)
+            }
         }.launchIn(scope)
 
         val batteryService = connection.services.findService(BATTERY_SERVICE_UUID)!!

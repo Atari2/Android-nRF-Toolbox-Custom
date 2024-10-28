@@ -50,26 +50,17 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nordicsemi.android.gradle:version-catalog:1.11.1")
+            from("no.nordicsemi.android.gradle:version-catalog:1.11.12")
         }
     }
 }
 
-rootProject.name = "Android-nRF-Toolbox"
+rootProject.name = "Android-nRF-Toolbox-Custom"
 
 include(":app")
 
-include(":profile_bps")
-include(":profile_cgms")
-include(":profile_csc")
-include(":profile_gls")
-include(":profile_hrs")
-include(":profile_hts")
-include(":profile_prx")
-include(":profile_rscs")
 include(":profile_uart")
 
-include(":lib_analytics")
 include(":lib_scanner")
 include(":lib_service")
 include(":lib_ui")

@@ -71,8 +71,7 @@ fun UARTScreen() {
                 connectionState = state.uartManagerState.connectionState,
                 title = R.string.uart_title,
                 navigateUp = navigateUp,
-                disconnect = { viewModel.onEvent(DisconnectEvent) },
-                openLogger = { viewModel.onEvent(OpenLogger) }
+                disconnect = { viewModel.onEvent(DisconnectEvent) }
             )
         }
     ) {

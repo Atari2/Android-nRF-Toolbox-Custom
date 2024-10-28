@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import no.nordicsemi.android.common.core.DataByteArray
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattServices
@@ -53,6 +52,7 @@ import no.nordicsemi.android.kotlin.ble.core.data.BleGattProperty
 import no.nordicsemi.android.kotlin.ble.core.data.BleWriteType
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
 import no.nordicsemi.android.kotlin.ble.core.data.Mtu
+import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 import no.nordicsemi.android.kotlin.ble.profile.battery.BatteryLevelParser
 import no.nordicsemi.android.service.DEVICE_DATA
 import no.nordicsemi.android.service.NotificationService
@@ -92,7 +92,7 @@ internal class UARTService : NotificationService() {
     }
 
     private fun startGattClient(device: ServerDevice) = lifecycleScope.launch {
-        val client = ClientBleGatt.connect(this@UARTService, device, lifecycleScope, logger = { p, s -> repository.log(p, s) })
+        val client = ClientBleGatt.connect(this@UARTService, device, lifecycleScope)
         this@UARTService.client = client
 
         if (!client.isConnected) {
@@ -128,14 +128,12 @@ internal class UARTService : NotificationService() {
         txCharacteristic.getNotifications()
             .map { String(it.value) }
             .onEach { repository.onNewMessageReceived(it) }
-            .onEach { repository.log(10, "Received: $it") }
             .catch { it.printStackTrace() }
             .launchIn(lifecycleScope)
 
         repository.command
             .onEach { rxCharacteristic.splitWrite(DataByteArray.from(it), getWriteType(rxCharacteristic)) }
             .onEach { repository.onNewMessageSent(it) }
-            .onEach { repository.log(10, "Sent: $it") }
             .catch { it.printStackTrace() }
             .launchIn(lifecycleScope)
 

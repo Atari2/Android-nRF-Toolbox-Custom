@@ -6,8 +6,6 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import no.nordicsemi.android.common.logger.BleLoggerAndLauncher
-import no.nordicsemi.android.ui.view.NordicLoggerFactory
-import no.nordicsemi.android.ui.view.NordicLoggerFactoryHiltModule
 
 @Module
 @TestInstallIn(
